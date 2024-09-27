@@ -57,14 +57,17 @@ func generateFile() error {
 		return err
 	}
 
-	gzipWriter := gzip.NewWriter(file)
+	gzipWriter, err := gzip.NewWriterLevel(file, 9)
+	if err != nil {
+		return err
+	}
 
 	rng := rand.New(rand.NewPCG(42, 1024))
 
 	for i := 0; i < 1_000_000_000; i++ {
 		randomCity := cityNames[rng.IntN(len(cityNames))]
 		row := fmt.Sprintf(
-			"%s;%.2f\n",
+			"%s;%.1f\n",
 			randomCity,
 			rng.Float32()*100.0,
 		)
